@@ -1,0 +1,10 @@
+{
+  "name": "TomTok",
+  "short_name": "TomTok",
+  "description": "Discover and share short videos on TomTok.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#09090d",
+  "theme_color": "#09090d"
+}
