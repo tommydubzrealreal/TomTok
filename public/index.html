@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TomTok — videos for you</title>
+<style>
+:root{--bg:#09090d;--panel:#15151c;--muted:#a5a5b3;--pink:#ff356d;--cyan:#24e6dc;--line:#292934}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font:15px/1.4 system-ui,sans-serif}
+button,input{font:inherit}button{cursor:pointer;border:0;color:inherit}
+.top{height:64px;position:sticky;top:0;z-index:5;background:#09090def;backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.brand{font-size:25px;font-weight:950;letter-spacing:-1.5px}.brand span{color:var(--pink)}.brand i{font-style:normal;color:var(--cyan)}
+.search{width:min(38vw,390px);background:#20202a;border:1px solid var(--line);border-radius:999px;padding:10px 16px;color:white;outline:none}
+.pill{padding:10px 16px;border-radius:999px;background:var(--panel);font-weight:700}.primary{background:var(--pink);color:white}
+.layout{max-width:1180px;margin:auto;display:grid;grid-template-columns:190px minmax(0,1fr) 220px;gap:24px;padding:22px}
+.side{position:sticky;top:86px;height:max-content}.navitem{display:flex;gap:13px;align-items:center;padding:14px 12px;border-radius:12px;color:#ddd;font-weight:700}.navitem.active{background:#20202a}
+.rightbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}.rightbox p{color:var(--muted);font-size:13px}
+.feed-head{display:flex;justify-content:space-between;margin:2px 0 16px}.tabs{font-weight:850;border-bottom:3px solid var(--pink);padding-bottom:8px}
+.card{display:grid;grid-template-columns:minmax(0,1fr) 58px;gap:12px;margin:0 auto 24px;max-width:650px}
+.video{height:min(72vh,650px);min-height:390px;background:linear-gradient(145deg,#29283c,#12121a);border:1px solid #333340;border-radius:18px;overflow:hidden;position:relative}
+.video video{width:100%;height:100%;object-fit:contain;background:#000}
+.caption{position:absolute;bottom:0;left:0;right:0;padding:50px 17px 17px;background:linear-gradient(transparent,#000d);pointer-events:none}
+.creator{font-weight:850;margin-bottom:6px}.desc{max-width:95%;overflow-wrap:anywhere}.sound{font-size:12px;margin-top:7px;color:#ddd}
+.actions{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:17px;padding-bottom:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--cyan));display:grid;place-items:center;font-weight:900;border:2px solid white}
+.action{background:none;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:#eee}.action strong{font-size:27px}
+.empty{color:var(--muted);text-align:center;padding:55px 15px;background:var(--panel);border-radius:16px}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:10;align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}
+.dialog{width:min(440px,100%);background:#191922;border:1px solid var(--line);border-radius:18px;padding:20px}
+.dialog input,.dialog textarea{width:100%;margin:8px 0 12px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0e0e14;color:#fff}
+.dialog textarea{resize:vertical;min-height:75px}.row{display:flex;gap:9px;justify-content:flex-end}
+.small{color:var(--muted);font-size:12px}footer{font-size:12px;color:#777;margin:20px 8px}
+@media(max-width:900px){.layout{grid-template-columns:65px minmax(0,1fr);gap:14px}.side .navitem span,.rightcol{display:none}.navitem{justify-content:center}}
+@media(max-width:600px){.top{padding:0 12px;height:58px}.search{width:34vw}.layout{display:block;padding:12px 8px 20px}.side{display:none}.card{grid-template-columns:minmax(0,1fr) 45px;gap:7px}.video{height:calc(100dvh - 150px);min-height:430px;border-radius:13px}.actions{gap:13px}.avatar{width:36px;height:36px}}
+</style></head>
+<body>
+<header class="top"><div class="brand"><span>Tom</span><i>Tok</i></div><input class="search" id="search" placeholder="Search creators or videos"><button class="pill primary" id="openUpload">＋ Upload</button></header>
+<div class="layout">
+<aside class="side"><div class="navitem active"><b>⌂</b><span>For You</span></div><div class="navitem"><b>◎</b><span>Following</span></div><div class="navitem"><b>⌕</b><span>Explore</span></div><footer>TomTok · 2026</footer></aside>
+<main><div class="feed-head"><div class="tabs">For You</div><span class="small" id="status">Connecting…</span></div><section id="feed"><div class="empty">Loading TomTok…</div></section></main>
+<aside class="rightcol"><div class="rightbox"><h3>Welcome to TomTok</h3><p>Share clips, discover creators, and enjoy the feed.</p><button class="pill primary" id="openUpload2">＋ Upload a video</button></div><div class="rightbox"><h3>Trending tags</h3><p>#tomtok　#gaming　#memes　#beats　#roblox</p></div></aside>
+</div>
+<div class="modal" id="uploadModal"><div class="dialog"><h2>Upload to TomTok</h2><form id="uploadForm"><label class="small">Your username</label><input name="username" maxlength="24" placeholder="@yourname" value="@tommy789real"><label class="small">Caption</label><textarea name="caption" maxlength="220" placeholder="Write a caption…"></textarea><label class="small">Video file (MP4, WebM, OGG, MOV · max 100 MB)</label><input name="video" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime" required><div class="row"><button type="button" class="pill" id="closeUpload">Cancel</button><button class="pill primary" id="submitUpload">Post video</button></div></form><p class="small" id="uploadStatus">Videos are uploaded to the server hosting this TomTok app.</p></div></div>
+<script>
+const feed=document.querySelector("#feed"), statusEl=document.querySelector("#status");
+let allPosts=[];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function api(url,options={}){const r=await fetch(url,options);const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||"Request failed");return data}
+function render(){
+ const q=document.querySelector("#search").value.toLowerCase();
+ const posts=allPosts.filter(p=>(p.username+" "+p.caption).toLowerCase().includes(q));
+ if(!posts.length){feed.innerHTML='<div class="empty">No videos yet. Be the first to post!</div>';return}
+ feed.innerHTML=posts.map(p=>`<article class="card"><div class="video"><video src="${esc(p.videoUrl)}" controls loop playsinline preload="metadata"></video><div class="caption"><div class="creator">${esc(p.username)}</div><div class="desc">${esc(p.caption)}</div><div class="sound">♫ Original sound</div></div></div><div class="actions"><div class="avatar">${esc((p.username||"T").replace("@","")[0]||"T").toUpperCase()}</div><button class="action like" data-id="${esc(p.id)}"><strong>♥</strong><span>${p.likes||0}</span></button><button class="action comment" data-id="${esc(p.id)}"><strong>●</strong><span>${(p.comments||[]).length}</span></button><button class="action share" data-id="${esc(p.id)}"><strong>↗</strong><span>Share</span></button></div></article>`).join("");
+ document.querySelectorAll(".like").forEach(b=>b.onclick=async()=>{b.disabled=true;try{await api(`/api/posts/${b.dataset.id}/like`,{method:"POST"});await load()}catch(e){alert(e.message)}finally{b.disabled=false}});
+ document.querySelectorAll(".comment").forEach(b=>b.onclick=async()=>{const p=allPosts.find(x=>x.id===b.dataset.id);const prior=(p.comments||[]).map(c=>"• "+c.text).join("\n");const text=prompt("Comments on this video:\n"+(prior||"No comments yet.")+"\n\nWrite a comment:");if(!text||!text.trim())return;try{await api(`/api/posts/${b.dataset.id}/comments`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});await load()}catch(e){alert(e.message)}});
+ document.querySelectorAll(".share").forEach(b=>b.onclick=async()=>{const p=allPosts.find(x=>x.id===b.dataset.id);const link=location.origin+p.videoUrl;try{await navigator.clipboard.writeText(link);alert("Video link copied!")}catch{prompt("Copy this video link:",link)}});
+}
+async function load(){try{allPosts=await api("/api/posts");statusEl.textContent="Connected to TomTok server";render()}catch(e){statusEl.textContent="Server connection error";feed.innerHTML='<div class="empty">Could not connect to TomTok server.<br>Make sure the server is running, then refresh.</div>'}}
+const modal=document.querySelector("#uploadModal");function openModal(){modal.classList.add("open")}function closeModal(){modal.classList.remove("open")}
+document.querySelector("#openUpload").onclick=openModal;document.querySelector("#openUpload2").onclick=openModal;document.querySelector("#closeUpload").onclick=closeModal;
+document.querySelector("#search").addEventListener("input",render);
+document.querySelector("#uploadForm").addEventListener("submit",async e=>{e.preventDefault();const form=e.currentTarget;const file=form.elements.video.files[0];if(!file)return;const button=document.querySelector("#submitUpload");button.disabled=true;button.textContent="Uploading…";document.querySelector("#uploadStatus").textContent="Uploading video to server…";try{const body=new FormData(form);await api("/api/posts",{method:"POST",body});form.reset();closeModal();await load();window.scrollTo({top:0,behavior:"smooth"})}catch(err){document.querySelector("#uploadStatus").textContent=err.message}finally{button.disabled=false;button.textContent="Post video"}});
+load();
+</script></body></html>
