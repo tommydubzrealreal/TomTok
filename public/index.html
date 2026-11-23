@@ -34,14 +34,30 @@ button,input{font:inherit}button{cursor:pointer;border:0;color:inherit}
 @media(max-width:900px){.layout{grid-template-columns:65px minmax(0,1fr);gap:14px}.side .navitem span,.rightcol{display:none}.navitem{justify-content:center}}
 @media(max-width:600px){.top{padding:0 12px;height:58px}.search{width:34vw}.layout{display:block;padding:12px 8px 20px}.side{display:none}.card{grid-template-columns:minmax(0,1fr) 45px;gap:7px}.video{height:calc(100dvh - 150px);min-height:430px;border-radius:13px}.actions{gap:13px}.avatar{width:36px;height:36px}}
 </style></head>
-<body>
-<header class="top"><div class="brand"><span>Tom</span><i>Tok</i></div><input class="search" id="search" placeholder="Search creators or videos"><button class="pill primary" id="openUpload">＋ Upload</button></header>
+<body><header class="top">
+  <div class="brand"><span>Tom</span><i>Tok</i></div>
+  <input class="search" id="search" placeholder="Search creators or videos">
+  <button class="pill" id="loginButton">Log in</button>
+  <button class="pill primary" id="openUpload">＋ Upload</button>
+</header><div class="brand"><span>Tom</span><i>Tok</i></div><input class="search" id="search" placeholder="Search creators or videos"><button class="pill primary" id="openUpload">＋ Upload</button></header>
 <div class="layout">
 <aside class="side"><div class="navitem active"><b>⌂</b><span>For You</span></div><div class="navitem"><b>◎</b><span>Following</span></div><div class="navitem"><b>⌕</b><span>Explore</span></div><footer>TomTok · 2026</footer></aside>
 <main><div class="feed-head"><div class="tabs">For You</div><span class="small" id="status">Connecting…</span></div><section id="feed"><div class="empty">Loading TomTok…</div></section></main>
 <aside class="rightcol"><div class="rightbox"><h3>Welcome to TomTok</h3><p>Share clips, discover creators, and enjoy the feed.</p><button class="pill primary" id="openUpload2">＋ Upload a video</button></div><div class="rightbox"><h3>Trending tags</h3><p>#tomtok　#gaming　#memes　#beats　#roblox</p></div></aside>
 </div>
-<div class="modal" id="uploadModal"><div class="dialog"><h2>Upload to TomTok</h2><form id="uploadForm"><label class="small">Your username</label><input name="username" maxlength="24" placeholder="@yourname" value="@tommy789real"><label class="small">Caption</label><textarea name="caption" maxlength="220" placeholder="Write a caption…"></textarea><label class="small">Video file (MP4, WebM, OGG, MOV · max 100 MB)</label><input name="video" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime" required><div class="row"><button type="button" class="pill" id="closeUpload">Cancel</button><button class="pill primary" id="submitUpload">Post video</button></div></form><p class="small" id="uploadStatus">Videos are uploaded to the server hosting this TomTok app.</p></div></div>
+<div class="modal" id="uploadModal"><div class="modal" id="authModal">
+  <div class="dialog">
+    <h2 id="authTitle">Log in to TomTok</h2>
+    <form id="authForm">
+      <input name="username" placeholder="Username" maxlength="24" required>
+      <input name="password" type="password" placeholder="Password" minlength="10" required>
+      <button class="pill primary" type="submit" id="authSubmit">Log in</button>
+    </form>
+    <p class="small" id="authStatus"></p>
+    <button class="pill" id="switchAuth">Need an account? Sign up</button>
+    <button class="pill" id="closeAuth">Close</button>
+  </div>
+</div><div class="dialog"><h2>Upload to TomTok</h2><form id="uploadForm"><label class="small">Your username</label><input name="username" maxlength="24" placeholder="@yourname" value="@tommy789real"><label class="small">Caption</label><textarea name="caption" maxlength="220" placeholder="Write a caption…"></textarea><label class="small">Video file (MP4, WebM, OGG, MOV · max 100 MB)</label><input name="video" type="file" accept="video/mp4,video/webm,video/ogg,video/quicktime" required><div class="row"><button type="button" class="pill" id="closeUpload">Cancel</button><button class="pill primary" id="submitUpload">Post video</button></div></form><p class="small" id="uploadStatus">Videos are uploaded to the server hosting this TomTok app.</p></div></div>
 <script>
 const feed=document.querySelector("#feed"), statusEl=document.querySelector("#status");
 let allPosts=[];
