@@ -62,8 +62,115 @@ button,input{font:inherit}button{cursor:pointer;border:0;color:inherit}
 const feed=document.querySelector("#feed"), statusEl=document.querySelector("#status");
 let allPosts=[];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-async function api(url,options={}){const base="https://tommytok.onrender.com";const r=await fetch(base+url,options);const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||"Request failed");return data}
-function render(){
+
+let authToken = localStorage.getItem("tomtokToken") || "";
+let currentUser = localStorage.getItem("tomtokUsername") || "";
+
+async function api(url, options = {}) {
+  const base = "https://tommytok.onrender.com";
+  const headers = { ...(options.headers || {}) };
+
+  if (authToken) {
+    headers.Authorization = "Bearer " + authToken;
+  }
+
+  const r = await fetch(base + url, { ...options, headers });
+  const data = await r.json().catch(() => ({}));
+
+  if (!r.ok) throw new Error(data.error || "Request failed");
+  return data;
+}
+
+function updateLoginButton() {
+  const button = document.querySelector("#loginButton");
+  if (button) {
+    button.textContent = currentUser ? "Log out" : "Log in";
+  }
+}
+
+let signupMode = false;
+
+function showAuth() {
+  document.querySelector("#authModal").classList.add("open");
+}
+
+document.querySelector("#loginButton").onclick = async () => {
+  if (authToken) {
+    try {
+      await api("/api/logout", { method: "POST" });
+    } catch (e) {}
+
+    authToken = "";
+    currentUser = "";
+    localStorage.removeItem("tomtokToken");
+    localStorage.removeItem("tomtokUsername");
+    updateLoginButton();
+    alert("You have logged out.");
+  } else {
+    showAuth();
+  }
+};
+
+document.querySelector("#closeAuth").onclick = () => {
+  document.querySelector("#authModal").classList.remove("open");
+};
+
+document.querySelector("#switchAuth").onclick = () => {
+  signupMode = !signupMode;
+
+  document.querySelector("#authTitle").textContent =
+    signupMode ? "Create your TomTok account" : "Log in to TomTok";
+
+  document.querySelector("#authSubmit").textContent =
+    signupMode ? "Sign up" : "Log in";
+
+  document.querySelector("#switchAuth").textContent =
+    signupMode ? "Already have an account? Log in" : "Need an account? Sign up";
+};
+
+document.querySelector("#authForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const status = document.querySelector("#authStatus");
+  const button = document.querySelector("#authSubmit");
+
+  button.disabled = true;
+  status.textContent = "Please wait...";
+
+  try {
+    const result = await api(
+      signupMode ? "/api/signup" : "/api/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: form.elements.username.value,
+          password: form.elements.password.value
+        })
+      }
+    );
+
+    authToken = result.token;
+    currentUser = result.username;
+
+    localStorage.setItem("tomtokToken", authToken);
+    localStorage.setItem("tomtokUsername", currentUser);
+
+    updateLoginButton();
+    document.querySelector("#authModal").classList.remove("open");
+    form.reset();
+
+    alert("Welcome to TomTok, @" + currentUser + "!");
+  } catch (error) {
+    status.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
+
+updateLoginButton();
+  
  const q=document.querySelector("#search").value.toLowerCase();
  const posts=allPosts.filter(p=>(p.username+" "+p.caption).toLowerCase().includes(q));
  if(!posts.length){feed.innerHTML='<div class="empty">No videos yet. Be the first to post!</div>';return}
