@@ -1,0 +1,9 @@
+{
+  "appId": "com.tomtok.app",
+  "appName": "TomTok",
+  "webDir": "public",
+  "server": {
+    "url": "https://tommytok.onrender.com",
+    "cleartext": false
+  }
+}
