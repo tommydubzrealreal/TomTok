@@ -46,7 +46,7 @@ button,input{font:inherit}button{cursor:pointer;border:0;color:inherit}
 const feed=document.querySelector("#feed"), statusEl=document.querySelector("#status");
 let allPosts=[];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-async function api(url,options={}){const r=await fetch(url,options);const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||"Request failed");return data}
+async function api(url,options={}){const base="https://tommytok.onrender.com";const r=await fetch(base+url,options);const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||"Request failed");return data}
 function render(){
  const q=document.querySelector("#search").value.toLowerCase();
  const posts=allPosts.filter(p=>(p.username+" "+p.caption).toLowerCase().includes(q));
